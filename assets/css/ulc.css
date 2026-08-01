@@ -1,0 +1,404 @@
+/* ==========================================================================
+   ULC — Base stylesheet
+   Design tokens + component classes. Plain CSS (no @apply) so this file works
+   with a compiled Tailwind build, the Play CDN, or on its own.
+
+   PALETTE — taken from the university crest.
+   Two of the five brand colours cannot legibly carry text on a dark ground:
+     #8B0000 maroon  2.1:1 on black  -> surface only
+     #8B4513 brown   3.0:1 on black  -> borders and fills only
+   Each therefore has a text-safe partner below: gold sits on maroon fills, and
+   --ulc-brown-soft (7.4:1) carries brown-toned text. The crest colours are
+   used exactly as specified wherever they appear as surfaces.
+   ========================================================================== */
+
+:root {
+  /* Surfaces - warm near-blacks, tinted toward the crest maroon */
+  --ulc-black:    #000000;   /* page background */
+  --ulc-obsidian: #0B0708;   /* raised sections */
+  --ulc-ink:      #16090B;   /* cards, inputs, drop-zones */
+  --ulc-line:     #2E1A1C;   /* hairline borders */
+
+  /* Brand */
+  --ulc-maroon:      #8B0000;   /* crest field - surface only */
+  --ulc-maroon-lift: #A81212;   /* maroon hover */
+  --ulc-gold:        #FFD700;   /* crest gold - primary accent */
+  --ulc-gold-soft:   #FFE566;   /* gold hover */
+  --ulc-brown:       #8B4513;   /* giraffe - structural */
+  --ulc-brown-soft:  #CD8B4C;   /* text-safe brown, 7.4:1 on black */
+
+  /* Type */
+  --ulc-white: #FFFFFF;
+  --ulc-body:  #ECE3E1;   /* warm off-white, 16:1 on black */
+  --ulc-muted: #9A8B8C;   /* captions, 6.4:1 on black */
+
+  /* Rhythm */
+  --ulc-radius:    0.75rem;
+  --ulc-radius-sm: 0.375rem;
+  --ulc-ease:      cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --------------------------------------------------------------------------
+   1 - Base
+   -------------------------------------------------------------------------- */
+html { color-scheme: dark; scroll-behavior: smooth; }
+
+body {
+  background-color: var(--ulc-black);
+  color: var(--ulc-body);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--ulc-gold); color: var(--ulc-black); }
+
+:focus-visible {
+  outline: 2px solid var(--ulc-gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+[hidden] { display: none !important; }
+
+img { max-width: 100%; height: auto; }
+
+/* --------------------------------------------------------------------------
+   2 - Typographic utilities
+   -------------------------------------------------------------------------- */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--ulc-gold);
+}
+.eyebrow--brown { color: var(--ulc-brown-soft); }
+
+.prose-abstract p { margin-bottom: 1rem; line-height: 1.75; }
+.prose-abstract p:last-child { margin-bottom: 0; }
+
+.rule-gold {
+  width: 3.5rem;
+  height: 3px;
+  background-color: var(--ulc-gold);
+  border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   3 - Buttons
+   -------------------------------------------------------------------------- */
+.btn-gold,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--ulc-radius-sm);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  cursor: pointer;
+}
+
+.btn-gold {
+  background-color: var(--ulc-gold);
+  color: var(--ulc-black);
+  border: 1px solid var(--ulc-gold);
+}
+.btn-gold:hover { background-color: var(--ulc-gold-soft); border-color: var(--ulc-gold-soft); }
+
+.btn-ghost {
+  background-color: transparent;
+  border: 1px solid var(--ulc-line);
+  color: var(--ulc-body);
+}
+.btn-ghost:hover { border-color: var(--ulc-gold); color: var(--ulc-gold); }
+
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+
+/* --------------------------------------------------------------------------
+   4 - Forms
+   -------------------------------------------------------------------------- */
+.field-label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ulc-white);
+}
+.field-req { color: var(--ulc-gold); }
+
+.field-input {
+  width: 100%;
+  border-radius: var(--ulc-radius-sm);
+  background-color: var(--ulc-ink);
+  border: 1px solid var(--ulc-line);
+  padding: 0.75rem 1rem;
+  color: var(--ulc-body);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.field-input::placeholder { color: var(--ulc-muted); }
+.field-input:focus {
+  outline: none;
+  border-color: var(--ulc-gold);
+  box-shadow: 0 0 0 1px var(--ulc-gold);
+}
+.field-input--brown:focus { border-color: var(--ulc-brown-soft); box-shadow: 0 0 0 1px var(--ulc-brown-soft); }
+.field-input.is-invalid { border-color: #FF6B6B; }
+
+.field-error {
+  display: none;
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  color: #FF8A8A;
+}
+.field-error.is-visible { display: block; }
+
+.choice-card {
+  display: flex;
+  gap: 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--ulc-line);
+  background-color: var(--ulc-ink);
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+.choice-card:hover { border-color: var(--ulc-gold); }
+.choice-card:has(input:checked) {
+  border-color: var(--ulc-gold);
+  background-color: rgba(255, 215, 0, 0.08);
+}
+/* Fallback for browsers without :has() - JS mirrors the state onto the class */
+.choice-card.is-selected {
+  border-color: var(--ulc-gold);
+  background-color: rgba(255, 215, 0, 0.08);
+}
+.choice-card input { accent-color: var(--ulc-gold); }
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  border: 2px dashed var(--ulc-line);
+  background-color: var(--ulc-ink);
+  padding: 2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+.dropzone:hover,
+.dropzone.is-dragover {
+  border-color: var(--ulc-gold);
+  background-color: rgba(255, 215, 0, 0.08);
+}
+.dz-filename { font-size: 0.875rem; font-weight: 600; color: var(--ulc-gold); }
+
+/* --------------------------------------------------------------------------
+   5 - Wizard
+   -------------------------------------------------------------------------- */
+.step-panel { display: none; }
+.step-panel.is-active { display: block; animation: ulc-fade-up 0.35s var(--ulc-ease) both; }
+
+.step-dot {
+  flex: 1 1 0%;
+  border-radius: 9999px;
+  background-color: var(--ulc-ink);
+  color: var(--ulc-muted);
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.step-dot.is-done { background-color: var(--ulc-gold); color: var(--ulc-black); }
+
+@keyframes ulc-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   6 - Rector welcome
+   -------------------------------------------------------------------------- */
+.rector-ribbon {
+  background-color: var(--ulc-maroon);
+  color: var(--ulc-white);
+}
+.rector-ribbon a { color: var(--ulc-gold); text-decoration: underline; text-underline-offset: 3px; }
+.rector-ribbon a:hover { color: var(--ulc-white); }
+
+.rector-band {
+  background-image: linear-gradient(155deg, var(--ulc-maroon) 0%, #3A0000 42%, var(--ulc-black) 100%);
+}
+
+.rector-portrait {
+  display: block;
+  width: 100%;
+  border-radius: var(--ulc-radius);
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+}
+
+.rector-quote p { margin-bottom: 1.15rem; line-height: 1.8; }
+.rector-quote p:last-child { margin-bottom: 0; }
+
+.rector-signature { font-weight: 800; color: var(--ulc-gold); }
+
+/* --------------------------------------------------------------------------
+   7 - Research hub
+   -------------------------------------------------------------------------- */
+.tag-chip {
+  border-radius: 9999px;
+  border: 1px solid var(--ulc-line);
+  padding: 0.375rem 1rem;
+  font-size: 0.875rem;
+  color: var(--ulc-body);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
+}
+.tag-chip:hover { border-color: var(--ulc-brown-soft); color: var(--ulc-brown-soft); }
+.tag-chip[aria-pressed="true"] {
+  border-color: var(--ulc-brown-soft);
+  background-color: rgba(139, 69, 19, 0.3);
+  color: var(--ulc-brown-soft);
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--ulc-radius);
+  border: 1px solid var(--ulc-line);
+  background-color: var(--ulc-obsidian);
+  padding: 1.25rem;
+  transition: border-color 0.18s ease, transform 0.18s var(--ulc-ease);
+}
+.project-card:hover { border-color: var(--ulc-brown-soft); transform: translateY(-2px); }
+
+.tag-pill {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 9999px;
+  background-color: rgba(139, 69, 19, 0.32);
+  color: var(--ulc-brown-soft);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+.meta-row dt { color: var(--ulc-muted); }
+.meta-row dd { text-align: right; font-weight: 500; color: var(--ulc-body); }
+
+.link-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ulc-gold);
+  transition: color 0.18s ease;
+}
+.link-accent:hover { color: var(--ulc-white); }
+
+/* --------------------------------------------------------------------------
+   8 - Fundraising
+   -------------------------------------------------------------------------- */
+.tier-btn {
+  border-radius: var(--ulc-radius-sm);
+  border: 1px solid var(--ulc-line);
+  background-color: var(--ulc-ink);
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--ulc-body);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+}
+.tier-btn:hover { border-color: var(--ulc-gold); }
+.tier-btn[aria-pressed="true"] {
+  border-color: var(--ulc-gold);
+  background-color: rgba(255, 215, 0, 0.12);
+  color: var(--ulc-gold);
+}
+
+.fund-track {
+  height: 0.75rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: var(--ulc-ink);
+}
+.fund-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 9999px;
+  /* Maroon into gold - the crest read left to right */
+  background-image: linear-gradient(90deg, var(--ulc-maroon), var(--ulc-gold));
+  transition: width 1.4s var(--ulc-ease);
+}
+
+/* --------------------------------------------------------------------------
+   9 - Language switch
+   -------------------------------------------------------------------------- */
+.lang-switch {
+  display: inline-flex;
+  border: 1px solid var(--ulc-line);
+  border-radius: 9999px;
+  padding: 2px;
+  background-color: var(--ulc-ink);
+}
+.lang-switch button,
+.lang-switch a {
+  border: 0;
+  background: transparent;
+  border-radius: 9999px;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ulc-muted);
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+.lang-switch button:hover,
+.lang-switch a:hover { color: var(--ulc-body); }
+.lang-switch button[aria-pressed="true"],
+.lang-switch a[aria-current="page"] {
+  background-color: var(--ulc-gold);
+  color: var(--ulc-black);
+}
+
+/* --------------------------------------------------------------------------
+   10 - Brand mark
+   -------------------------------------------------------------------------- */
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   11 - Reduced motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .step-panel.is-active { animation: none; }
+  .fund-bar { transition: none; }
+  .project-card:hover { transform: none; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

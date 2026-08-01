@@ -1,0 +1,22 @@
+# =============================================================================
+# Universite Loyola du Congo - Netlify build configuration
+# Lives at the repository root. Used for Git-connected deploys.
+#
+# Headers and redirects are NOT here on purpose: they live in netlify/_headers
+# and netlify/_redirects, which tools/build.js copies into dist/. Keeping them
+# in the publish directory means they apply to a drag-and-drop upload too, not
+# just to Git builds.
+# =============================================================================
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Pin the runtime. Without this, Netlify pins whatever its build image
+  # defaulted to on your first deploy, and a later image change can break the
+  # build months from now with no commit to explain it.
+  NODE_VERSION = "20"
+
+  # Do NOT set NODE_ENV = "production" here. Netlify installs devDependencies
+  # by default, and tailwindcss is a devDependency needed at build time.

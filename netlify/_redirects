@@ -1,0 +1,16 @@
+# =============================================================================
+# ULC — redirects
+# Copied into dist/ by tools/build.js.
+#
+# Friendly paths for print material and posters, so a flyer can carry
+# ulc.cd/admissions rather than a fragment URL.
+#
+# Do NOT add a "/*  /index.html  200" catch-all. That rule is for single-page
+# apps; here it would swallow genuine 404s and hide broken project links.
+# Netlify serves /404.html for unmatched paths automatically.
+# =============================================================================
+
+/admissions   /#admissions   302
+/recherche    /#research     302
+/don          /#give         302
+/recteur      /#rector       302

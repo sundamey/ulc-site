@@ -1,0 +1,39 @@
+# =============================================================================
+# ULC — HTTP headers
+# Copied verbatim into dist/ by tools/build.js. Living in the publish directory
+# means these apply to BOTH deploy methods: a Git-connected build and a
+# drag-and-drop upload of dist/. A netlify.toml at the repo root would only
+# apply to the first.
+# =============================================================================
+
+# --- Security, everywhere ----------------------------------------------------
+# The CSP is strict because the site has no inline scripts: the boot calls live
+# in assets/js/boot.*.js precisely so 'unsafe-inline' is not needed. Add an
+# inline <script> or a style="" attribute later and the build will fail before
+# you can ship it (tools/build.js checks). Google Fonts is the only third-party
+# origin; self-host Inter and style-src/font-src can drop to 'self'.
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+
+# --- Caching -----------------------------------------------------------------
+# Netlify's default is "max-age=0, must-revalidate" — correct, but it costs a
+# revalidation round trip per asset per visit, which is slow on a Kinshasa
+# connection. tools/build.js gives every file under /assets/ an 8-character
+# content hash, so a changed file always gets a new URL. That is the only thing
+# that makes a one-year immutable cache safe. If you ever remove the
+# fingerprinting step, delete this block too, or returning visitors will hold a
+# stale site for a year.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML is never fingerprinted, so it must always revalidate and content edits
+# appear immediately.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
